@@ -97,7 +97,26 @@ body{
     }
 }
 
+/* MOBILE-FRIENDLY VIDEO FIX */
+@media (max-width:768px){
+    .media-container {
+        flex-direction: column;   /* stack videos vertically */
+        align-items: center;
+        .media-container {
+    gap: 15px;
+}
+    }
 
+    .media-box {
+        width: 90%;               /* almost full width */
+        margin: 10px 0;
+    }
+
+    .media-box video {
+        width: 100%;              /* fill container */
+        height: auto;             /* maintain aspect ratio */
+    }
+}
 
 .sidebar.show{
     transform:translateX(0);
@@ -245,30 +264,34 @@ body{
      <div class="media-container">
 
      <div class="media-box">
-        <video src="video1.mp4" controls></video>
-        <p class="media-title">ABC Song</p>
-     </div>
+    <video src="video1.mp4" controls playsinline muted></video>
+    <p class="media-title">ABC Song</p>
+</div>
 
-     <div class="media-box">
-        <video src="video2.mp4" controls></video>
-        <p class="media-title"> Surprise Egg Song(Verhicle Version)</p>
-     </div>
-     <div class="media-box">
-        <video src="video3.mp4" controls></video>
-        <p class="media-title"> London Bridge Is Falling Down</p> 
-     </div>
-     <div class="media-box">
-        <video src="video4.mp4" controls></video>
-        <p class="media-title">Animal Finding Adventure</p>
-     </div>
-     <div class="media-box">
-        <video src="video5.mp4" controls></video>
-        <p class="media-title">Five Little Ducks 2</p>
-     </div> 
-     <div class="media-box">
-        <video src="video6.mp4" controls></video>
-        <p class="media-title">Peek_A_Boo_Let_s_Play_Hide_Seek</p>
-     </div>
+<div class="media-box">
+    <video src="video2.mp4" controls playsinline muted></video>
+    <p class="media-title"> Surprise Egg Song(Verhicle Version)</p>
+</div>
+
+<div class="media-box">
+    <video src="video3.mp4" controls playsinline muted></video>
+    <p class="media-title"> London Bridge Is Falling Down</p> 
+</div>
+
+<div class="media-box">
+    <video src="video4.mp4" controls playsinline muted></video>
+    <p class="media-title">Animal Finding Adventure</p>
+</div>
+
+<div class="media-box">
+    <video src="video5.mp4" controls playsinline muted></video>
+    <p class="media-title">Five Little Ducks 2</p>
+</div> 
+
+<div class="media-box">
+    <video src="video6.mp4" controls playsinline muted></video>
+    <p class="media-title">Peek_A_Boo_Let_s_Play_Hide_Seek</p>
+</div>
 </div>
 
 <!-- MODAL -->
