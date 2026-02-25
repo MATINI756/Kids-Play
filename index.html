@@ -410,6 +410,50 @@ function toggleSidebar(){document.getElementById("sidebar").classList.toggle("sh
 function closeModal(){document.getElementById("mediaModal").style.display="none";}
 document.getElementById("year").innerText = new Date().getFullYear();
 
+// COMMENTS FUNCTIONALITY
+const commentForm = document.getElementById('commentForm');
+const commentList = document.getElementById('commentList');
+
+// Load saved comments from localStorage (optional persistence)
+let comments = JSON.parse(localStorage.getItem('comments')) || [];
+
+function displayComments() {
+    commentList.innerHTML = '';
+    comments.forEach((c, index) => {
+        const commentDiv = document.createElement('div');
+        commentDiv.style.background = '#f9f9f9';
+        commentDiv.style.padding = '10px';
+        commentDiv.style.margin = '10px 0';
+        commentDiv.style.borderRadius = '10px';
+        commentDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
+        commentDiv.innerHTML = `
+            <strong>${c.name}</strong> (<em>${c.email}</em>) says:<br>
+            <p>${c.comment}</p>
+        `;
+        commentList.appendChild(commentDiv);
+    });
+}
+
+// Initial display of saved comments
+displayComments();
+
+commentForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const comment = document.getElementById('comment').value.trim();
+    
+    if(name && email && comment){
+        const newComment = {name, email, comment};
+        comments.push(newComment);
+        localStorage.setItem('comments', JSON.stringify(comments)); // optional persistence
+        displayComments();
+        commentForm.reset();
+    } else {
+        alert('Please fill in all fields.');
+    }
+});
+
 </script>
 
 </body>
