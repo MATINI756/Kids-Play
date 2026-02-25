@@ -174,6 +174,12 @@ canvas{
     border:3px dashed orange;
     border-radius:10px;
 }
+canvas {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  touch-action: none;
+}
 
 /* STARS/LEVEL */
 .score{
@@ -259,9 +265,7 @@ canvas{
   <button onclick="animalGame()">🐶 Animal Sounds</button>
 </div>
 
-<div class="box" id="game"></div>
-
-    </div>
+<div class="box" id="game">
 </div>
 
 <footer class="footer">
@@ -319,7 +323,7 @@ function speak(text){speechSynthesis.speak(new SpeechSynthesisUtterance(text));}
 function addStar(){stars++; if(stars%5===0) level++; document.getElementById("stars").innerText=stars; document.getElementById("level").innerText=level;}
 
 function abcGame(){
-  document.getElementById("game").innerHTML=`<h2>Trace the Letter</h2><h1>${letters[letterIndex]}</h1><canvas id="c" width="300" height="200"></canvas><br><button onclick="nextLetter()">Next</button>`;
+  document.getElementById("game").innerHTML=`<h2>Trace the Letter</h2><h1>${letters[letterIndex]}</h1><canvas id="c" width="320" height="220"></canvas><br><button onclick="nextLetter()">Next</button>`;
   speak(letters[letterIndex]);
   setupDraw();
 }
@@ -440,7 +444,69 @@ function setupDraw(){
 
 function clearCanvas(){if(ctx){ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); ctx.beginPath(); drawing=false;}}
 
-/* ====== GAME LOGIC END ====== */
+/* ====== GAME LOG/* ====== 
+/* ====== tracing and drawing funtion on mobile====== */
+function getPos(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+
+  if (e.touches) {
+    return {
+      x: e.touches[0].clientX - rect.left,
+      y: e.touches[0].clientY - rect.top
+    };
+  }
+
+  return { x: e.offsetX, y: e.offsetY };
+}
+
+function setupDraw(){
+  const c = document.getElementById("c");
+  ctx = c.getContext("2d");
+  ctx.lineCap = "round";
+
+  c.addEventListener("mousedown", start);
+  c.addEventListener("mousemove", move);
+  c.addEventListener("mouseup", end);
+
+  c.addEventListener("touchstart", start, { passive:false });
+  c.addEventListener("touchmove", move, { passive:false });
+  c.addEventListener("touchend", end);
+
+  function start(e){
+    e.preventDefault();
+    drawing = true;
+    const pos = getPos(e, c);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }
+
+  function move(e){
+    if(!drawing) return;
+    e.preventDefault();
+
+    const pos = getPos(e, c);
+
+    if(eraseMode){
+      ctx.globalCompositeOperation="destination-out";
+      ctx.lineWidth=18;
+    }else{
+      ctx.globalCompositeOperation="source-over";
+      ctx.lineWidth=4;
+      ctx.strokeStyle=currentColor;
+    }
+
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  }
+
+  function end(){
+    drawing=false;
+    ctx.beginPath();
+  }
+}
+
+</script>
+
 </script>
 
 </body>
