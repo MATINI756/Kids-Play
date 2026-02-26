@@ -274,8 +274,25 @@ canvas {
 
 <script>
 // SIDEBAR
-function toggleSidebar(){document.getElementById("sidebar").classList.toggle("show");}
+const sidebar = document.getElementById("sidebar");
+const hamburger = document.querySelector(".hamburger");
 
+function toggleSidebar() {
+    sidebar.classList.toggle("show");
+}
+// CLOSE SIDEBAR WHEN CLICKING ANYWHERE ON MOBILE
+document.addEventListener("click", function (e) {
+    // only on mobile screens
+    if (window.innerWidth < 900) {
+        // if sidebar is open
+        if (sidebar.classList.contains("show")) {
+            // click is NOT inside sidebar and NOT on hamburger
+            if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                sidebar.classList.remove("show");
+            }
+        }
+    }
+});
 // YEAR
 document.getElementById("year").innerText = new Date().getFullYear();
 
