@@ -425,23 +425,36 @@ document.addEventListener("click", function (e) {
 // MODAL
 function closeModal(){document.getElementById("mediaModal").style.display="none";}
 document.getElementById("year").innerText = new Date().getFullYear();
-
 // COMMENTS FUNCTIONALITY
 const commentForm = document.getElementById('commentForm');
 const commentList = document.getElementById('commentList');
 
-// Load saved comments from localStorage (optional persistence)
+// 24 hours in milliseconds
+const EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+
+// Load saved comments
 let comments = JSON.parse(localStorage.getItem('comments')) || [];
 
+// Remove expired comments
+function removeExpiredComments() {
+    const now = new Date().getTime();
+    comments = comments.filter(c => now - c.timestamp < EXPIRATION_TIME);
+    localStorage.setItem('comments', JSON.stringify(comments));
+}
+
+// Display comments
 function displayComments() {
+    removeExpiredComments(); // clean old ones first
     commentList.innerHTML = '';
-    comments.forEach((c, index) => {
+
+    comments.forEach((c) => {
         const commentDiv = document.createElement('div');
         commentDiv.style.background = '#f9f9f9';
         commentDiv.style.padding = '10px';
         commentDiv.style.margin = '10px 0';
         commentDiv.style.borderRadius = '10px';
         commentDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
+
         commentDiv.innerHTML = `
             <strong>${c.name}</strong> (<em>${c.email}</em>) says:<br>
             <p>${c.comment}</p>
@@ -450,19 +463,27 @@ function displayComments() {
     });
 }
 
-// Initial display of saved comments
+// Initial display
 displayComments();
 
+// Submit new comment
 commentForm.addEventListener('submit', function(e){
     e.preventDefault();
+
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const comment = document.getElementById('comment').value.trim();
-    
+
     if(name && email && comment){
-        const newComment = {name, email, comment};
+        const newComment = {
+            name,
+            email,
+            comment,
+            timestamp: new Date().getTime() // add time created
+        };
+
         comments.push(newComment);
-        localStorage.setItem('comments', JSON.stringify(comments)); // optional persistence
+        localStorage.setItem('comments', JSON.stringify(comments));
         displayComments();
         commentForm.reset();
     } else {
@@ -474,6 +495,7 @@ commentForm.addEventListener('submit', function(e){
 
 </body>
 </html>
+
 
 
 
